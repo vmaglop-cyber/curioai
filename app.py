@@ -1,9 +1,9 @@
 from flask import Flask, render_template_string, request, redirect, session
+import os
 
 app = Flask(__name__)
-app.secret_key = "curioai_secret_key"
+app.config["SECRET_KEY"] = "curioai_super_secret_123"
 
-# login simple (luego lo mejoramos)
 USUARIO = "admin"
 PASSWORD = "1234"
 
@@ -15,11 +15,13 @@ HTML_LOGIN = """
 </head>
 <body>
   <h2>CurioAI Login</h2>
+
   <form method="post">
     <input name="user" placeholder="Usuario" required><br><br>
     <input name="pass" type="password" placeholder="Contraseña" required><br><br>
     <button type="submit">Entrar</button>
   </form>
+
 </body>
 </html>
 """
@@ -31,6 +33,7 @@ HTML_PANEL = """
   <title>CurioAI Panel</title>
 </head>
 <body>
+
   <h1>CurioAI Panel</h1>
   <p>Bienvenido bro 😎</p>
 
@@ -44,8 +47,9 @@ HTML_PANEL = """
     <p>{{ guion }}</p>
   {% endif %}
 
-  <br>
+  <br><br>
   <a href="/logout">Cerrar sesión</a>
+
 </body>
 </html>
 """
@@ -79,7 +83,7 @@ def generar():
     🔥 Curiosidad sobre {tema}:
 
     Este es un guion automático generado por CurioAI.
-    Aquí iría contenido interesante, datos curiosos y narrativa para YouTube.
+    Aquí iría contenido interesante para YouTube.
     """
 
     return render_template_string(HTML_PANEL, guion=guion)
@@ -90,4 +94,5 @@ def logout():
     return redirect("/")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
